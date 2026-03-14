@@ -10,5 +10,10 @@ Rails.application.routes.draw do
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
+  scope :plaid do
+    post "link_token", to: "plaid#create_link_token"
+    post "exchange_public_token", to: "plaid#exchange_public_token"
+  end
+
   root "dashboard#index"
 end
