@@ -31,14 +31,9 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-ruby@v1
         with:
-          python-version: "3.11"
-
-      - name: Install backend dependencies
-        run: |
-          cd aegis/backend
-          pip install -r requirements.txt 2>/dev/null || pip install fastapi uvicorn sqlalchemy aiosqlite pydantic-settings httpx langchain langchain-community langchain-openai networkx
+          bundler-cache: true
 
       - uses: anthropics/claude-code-action@v1
         with:
@@ -46,77 +41,55 @@ jobs:
           trigger_phrase: "@claude"
           claude_args: "--max-turns 50"
           prompt: |
-            You are fixing issues and reviewing PRs for the Aegis Data Intelligence platform.
+            You are fixing issues and reviewing PRs for the Personal Finance Agent — a Rails 8.1 monolith with PostgreSQL, Devise, Sidekiq, and Tailwind CSS.
 
             ## When triggered on a PULL REQUEST (comment or review contains @claude)
-            If the context is a pull request (not an issue), you MUST perform a CODE REVIEW only:
+            If the context is a pull request, perform a CODE REVIEW only:
             1. Read the PR title, body, and all changed files.
-            2. Write a concise review: summary, what looks good, and any suggestions or concerns (bugs, style, tests, security).
-            3. Submit the review with: `gh pr review ${{ github.event.issue.number || github.event.pull_request.number }} --comment -b "YOUR_REVIEW_TEXT"` (use the correct PR number from context). Use APPROVE if no blocking issues, or REQUEST_CHANGES with clear reasons.
-            4. Do NOT push commits, modify code, or run tests when the trigger is a PR — only post the review and stop.
+            2. Write a concise review: summary, what looks good, and any suggestions or concerns (bugs, style, security, Rails conventions).
+            3. Submit the review with: `gh pr review <pr-number> --comment -b "YOUR_REVIEW_TEXT"`. Use APPROVE if no blocking issues, or REQUEST_CHANGES with clear reasons.
+            4. Do NOT push commits or modify code when the trigger is a PR — only post the review and stop.
+
+            ## When triggered on an ISSUE (comment or body contains @claude)
+            1. Read the issue carefully — the context is already provided.
+            2. Implement the fix following Rails conventions (thin controllers, service objects in app/services/, jobs in app/jobs/).
+            3. Run the test suite: `bin/rails test`
+            4. Create a PR once tests pass.
 
             ## CRITICAL: Do Not Waste Turns
-            - The issue/PR context is ALREADY provided to you above. Read it carefully.
-            - Do NOT list issues, fetch issues, or call GitHub API to find issues.
-            - Do NOT spend turns on exploration — go straight to implementing the fix.
-            - Python 3.11 and backend dependencies are already installed.
+            - The issue/PR context is ALREADY provided. Read it carefully before acting.
+            - Do NOT explore the codebase unnecessarily — go straight to the task.
             - `gh` CLI is authenticated and ready to use.
-
-            ## Mandatory: Run Tests Before Any PR
-
-            After making changes, ALWAYS run the test suite:
-            ```bash
-            cd aegis/backend && python -m pytest tests/ -v --tb=short
-            ```
-            ALL tests must pass before creating a PR. If tests fail, fix the issue and re-run.
-            Baseline: 68 tests. Your changes should not reduce this count.
 
             ## Complexity Assessment & PR Behavior
 
-            After implementing the fix and passing tests, assess the change complexity:
-
             ### SMALL (auto-merge)
-            Criteria — ALL of these must be true:
-            - 1-2 files changed (excluding test files)
-            - Less than 50 lines of code changed
-            - Does NOT touch: core/models.py, core/database.py, config.py, main.py, any agent file, any API router
-            - Pure bug fix with clear cause (typo, off-by-one, missing null check, import fix)
-            - No new dependencies added
+            Criteria — ALL must be true:
+            - 1-2 files changed (excluding tests)
+            - Less than 50 lines changed
+            - Pure bug fix (typo, missing null check, style fix)
+            - Does NOT touch models, migrations, routes, or service objects
 
             For SMALL changes:
-            1. Create a PR with title: `fix: <description>`
-            2. Add label `auto-merge` to the PR
-            3. Enable auto-merge on the PR: `gh pr merge --auto --squash <pr-number>`
-            4. Close the original issue with: `gh issue close <issue-number> -c "Fixed in #<pr-number> (auto-merged — small fix)"`
+            1. Create a PR: `fix: <description>`
+            2. Add label `auto-merge` and enable: `gh pr merge --auto --squash <pr-number>`
+            3. Close the issue: `gh issue close <issue-number> -c "Fixed in #<pr-number>"`
 
             ### MEDIUM-TO-CRITICAL (needs review)
-            Criteria — ANY of these is true:
-            - 3+ files changed
-            - 50+ lines of code changed
-            - Touches core files (models, database, config, agents, API routers)
-            - Adds new dependencies
-            - Changes business logic or data flow
-            - Modifies the agent pipeline (sentinel, orchestrator, architect, executor, investigator)
-            - Affects async/sync bridging patterns
-            - Changes test infrastructure (conftest, fixtures)
+            Criteria — ANY is true:
+            - 3+ files changed, 50+ lines changed
+            - Touches models, migrations, routes, service objects, or jobs
+            - Adds dependencies or changes business logic
 
             For MEDIUM-TO-CRITICAL changes:
-            1. Create a PR with title: `fix: <description>`
-            2. Add label `needs-review` to the PR
-            3. Do NOT request reviewers manually — the auto-assign workflow handles it
-            4. In the PR body, include:
-               - `Closes #<issue-number>` (MUST be on its own line so GitHub auto-closes the issue on merge)
-               - **Impact Assessment**: What parts of the system are affected
-               - **Files Changed**: List with brief explanation of each change
-               - **Test Results**: Full test output summary
-               - **Risk Level**: Medium / High / Critical with reasoning
-            5. Close the original issue with: `gh issue close <issue-number> -c "PR #<pr-number> created — needs review (@ashcastelinocs124)"`
-            6. Do NOT merge. Wait for human approval.
+            1. Create a PR: `fix: <description>` or `feat: <description>`
+            2. Add label `needs-review`
+            3. PR body must include `Closes #<issue-number>`, impact assessment, files changed, and test results
+            4. Do NOT merge — wait for human approval
 
             ## Project Conventions
-            - Read aegis/CLAUDE.md for full project context
-            - Commit messages: `fix(component):` or `feat(component):`
-            - All models in aegis/backend/aegis/core/models.py
-            - Async API / Sync agents — bridge with asyncio.to_thread
-            - Mock side_effect overrides return_value — clear with mock.side_effect = None first
-            - Patch notifier at source: aegis.services.notifier.notifier
+            - Read CLAUDE.md for full project context and architecture rules
+            - Commit messages: `fix(scope):` or `feat(scope):`
+            - Business logic belongs in app/services/ (namespaces: Analysis::, Planning::, Reporting::, Plaid::)
+            - Background jobs in app/jobs/ using Sidekiq
+            - Follow rubocop-rails-omakase style (double-quoted strings, spaces inside array brackets)
