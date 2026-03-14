@@ -56,7 +56,9 @@ module Plaid
     def process_added(transactions)
       transactions.each do |txn|
         account = ::Account.find_by!(plaid_account_id: txn.account_id)
-        ::Transaction.create!(transaction_attributes(txn, account))
+        record = ::Transaction.find_or_initialize_by(plaid_transaction_id: txn.transaction_id)
+        record.assign_attributes(transaction_attributes(txn, account))
+        record.save!
       end
     end
 
