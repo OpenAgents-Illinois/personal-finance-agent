@@ -10,8 +10,8 @@
     <% if @has_accounts %>
       <button
         data-controller="plaid-link"
-        data-plaid-link-link-token-url-value="<%= plaid_link_token_path %>"
-        data-plaid-link-exchange-url-value="<%= plaid_exchange_public_token_path %>"
+        data-plaid-link-link-token-url-value="<%= link_token_path %>"
+        data-plaid-link-exchange-url-value="<%= exchange_public_token_path %>"
         data-label="+ Add account"
         data-action="click->plaid-link#open"
         class="text-sm font-medium text-indigo-600 hover:text-indigo-800 disabled:opacity-50"
@@ -30,8 +30,8 @@
       </div>
       <button
         data-controller="plaid-link"
-        data-plaid-link-link-token-url-value="<%= plaid_link_token_path %>"
-        data-plaid-link-exchange-url-value="<%= plaid_exchange_public_token_path %>"
+        data-plaid-link-link-token-url-value="<%= link_token_path %>"
+        data-plaid-link-exchange-url-value="<%= exchange_public_token_path %>"
         data-label="Connect a bank account"
         data-action="click->plaid-link#open"
         class="flex-shrink-0 ml-6 bg-white text-indigo-600 font-semibold px-5 py-2.5 rounded-lg hover:bg-indigo-50 transition-colors disabled:opacity-50"
