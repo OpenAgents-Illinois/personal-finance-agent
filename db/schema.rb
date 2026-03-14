@@ -10,19 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_14_191510) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_14_193713) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
   create_table "accounts", force: :cascade do |t|
     t.string "account_subtype"
     t.string "account_type"
-    t.decimal "available_balance"
+    t.decimal "available_balance", precision: 15, scale: 2
     t.datetime "created_at", null: false
-    t.decimal "current_balance"
+    t.decimal "current_balance", precision: 15, scale: 2
     t.string "iso_currency_code"
-    t.string "name"
-    t.string "plaid_account_id"
+    t.string "name", null: false
+    t.string "plaid_account_id", null: false
     t.bigint "plaid_item_id", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
@@ -32,13 +32,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_14_191510) do
   end
 
   create_table "plaid_items", force: :cascade do |t|
-    t.string "access_token_encrypted"
+    t.string "access_token_encrypted", null: false
     t.datetime "created_at", null: false
     t.string "institution_id"
     t.string "institution_name"
     t.string "last_sync_cursor"
     t.datetime "last_synced_at"
-    t.string "plaid_item_id"
+    t.string "plaid_item_id", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.index ["plaid_item_id"], name: "index_plaid_items_on_plaid_item_id", unique: true
@@ -47,15 +47,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_14_191510) do
 
   create_table "transactions", force: :cascade do |t|
     t.bigint "account_id", null: false
-    t.decimal "amount"
+    t.decimal "amount", precision: 15, scale: 2, null: false
     t.date "authorized_date"
     t.string "category_detailed"
     t.string "category_primary"
     t.datetime "created_at", null: false
     t.string "merchant_name"
-    t.string "name"
-    t.boolean "pending"
-    t.string "plaid_transaction_id"
+    t.string "name", null: false
+    t.boolean "pending", default: false, null: false
+    t.string "plaid_transaction_id", null: false
     t.date "posted_date"
     t.jsonb "raw_payload_json"
     t.datetime "updated_at", null: false
