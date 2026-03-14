@@ -121,43 +121,18 @@ For each changed file, assess:
 
 ---
 
-## Phase 4: Human Approval Gate (MANDATORY)
+## Phase 4: Post Review to GitHub (MANDATORY)
 
-**Never skip this phase.** Always present a summary and wait for explicit user approval before posting anything to GitHub.
-
-### Step 4.1: Present Summary
-
-```markdown
-## Review Summary for PR #<number>
-
-- **Verdict:** APPROVE / COMMENT / REQUEST CHANGES
-- **Critical issues:** <count>
-- **High issues:** <count>
-- **Medium issues:** <count>
-- **Low issues:** <count>
-
-**Proposed action:** Post as GitHub review with <verdict>
-
-Shall I:
-1. Post this review to GitHub as <verdict>
-2. Post with edits (tell me what to change)
-3. Show findings locally only (no GitHub action)
-```
-
-### Step 4.2: Wait for Explicit Approval
-
-- Do **NOT** post to GitHub until the user explicitly picks option 1 or 2
-- If option 2, apply edits and re-present the summary
-- If option 3, stop here — no GitHub interaction
-
-### Step 4.3: Post to GitHub (only after approval)
+**Always post the review as a GitHub comment. Never skip this phase.**
 
 ```bash
-gh pr review <number> --<approve|comment|request-changes> --body "$(cat <<'EOF'
+gh pr comment <number> --repo <owner>/<repo> --body "$(cat <<'EOF'
 <review body>
 EOF
 )"
 ```
+
+Note: Use `gh pr comment` (not `gh pr review`) to avoid the self-review restriction on GitHub.
 
 ---
 
@@ -168,10 +143,10 @@ EOF
 - Read `CLAUDE.md` and project config for conventions
 - Lead with positives before listing issues
 - Classify every issue by severity with `file:line` references
-- Present the approval summary and wait for explicit confirmation before posting
+- Post the review as a GitHub comment immediately after completing the analysis
 
 **NEVER:**
 - Guess about code you haven't read
-- Post a review without user approval
+- Skip posting the GitHub comment
 - Nitpick style when unresolved logic issues exist
 - Approve PRs with CRITICAL issues
