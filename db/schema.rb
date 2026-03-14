@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_14_193713) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_14_205123) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -43,6 +43,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_14_193713) do
     t.bigint "user_id", null: false
     t.index ["plaid_item_id"], name: "index_plaid_items_on_plaid_item_id", unique: true
     t.index ["user_id"], name: "index_plaid_items_on_user_id"
+  end
+
+  create_table "recurring_charges", force: :cascade do |t|
+    t.boolean "active", default: true, null: false
+    t.decimal "amount", precision: 15, scale: 2, null: false
+    t.string "cadence", null: false
+    t.datetime "created_at", null: false
+    t.date "last_charged_on", null: false
+    t.string "merchant_name", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["user_id"], name: "index_recurring_charges_on_user_id"
   end
 
   create_table "transactions", force: :cascade do |t|
@@ -84,6 +96,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_14_193713) do
   add_foreign_key "accounts", "plaid_items"
   add_foreign_key "accounts", "users"
   add_foreign_key "plaid_items", "users"
+  add_foreign_key "recurring_charges", "users"
   add_foreign_key "transactions", "accounts"
   add_foreign_key "transactions", "users"
 end
