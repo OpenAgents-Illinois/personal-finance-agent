@@ -27,7 +27,7 @@ jobs:
       issues: write
       id-token: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -47,7 +47,7 @@ jobs:
             If the context is a pull request, perform a CODE REVIEW only:
             1. Read the PR title, body, and all changed files.
             2. Write a concise review: summary, what looks good, and any suggestions or concerns (bugs, style, security, Rails conventions).
-            3. Submit the review with: `gh pr review <pr-number> --comment -b "YOUR_REVIEW_TEXT"`. Use APPROVE if no blocking issues, or REQUEST_CHANGES with clear reasons.
+            3. Submit the review with: `gh pr comment ${{ github.event.issue.number || github.event.pull_request.number }} -b "YOUR_REVIEW_TEXT"`.
             4. Do NOT push commits or modify code when the trigger is a PR — only post the review and stop.
 
             ## When triggered on an ISSUE (comment or body contains @claude)
