@@ -44,33 +44,19 @@ Controllers must only:
 - call services
 - return responses
 
-Business logic must live in:
+Business logic must live in: app/services/
 
+Background jobs must live in: app/jobs/
 
-app/services/
-
-
-Background jobs must live in:
-
-
-app/jobs/
-
-
-External integrations must live in:
-
-
-app/services/integrations/
-
+External integrations must live in: app/services/integrations/
 
 Expected service namespaces:
-
 
 Analysis::
 Planning::
 Reporting::
 Plaid::
 Integrations::
-
 
 ---
 
@@ -89,21 +75,13 @@ These are **build-time roles**, not application code.
 - `ui_builder`
 - `testing_agent`
 
-Agent definitions are located in:
-
-
-.claude/agents/
-
+Agent definitions are located in: .claude/agents/
 
 ---
 
 # Claude Skills
 
-Reusable skills are defined in:
-
-
-.claude/skills/
-
+Reusable skills are defined in: .claude/skills/
 
 Examples include:
 
@@ -206,7 +184,6 @@ Plaid access tokens must be **encrypted before storage**.
 
 The application should follow this structure:
 
-
 app/
 models/
 controllers/
@@ -218,7 +195,6 @@ planning/
 reporting/
 plaid/
 integrations/
-
 
 Claude should avoid introducing unnecessary new top-level directories.
 
