@@ -17,6 +17,8 @@ class PlaidController < ApplicationController
     render json: { plaid_item_id: plaid_item.plaid_item_id }, status: :created
   rescue ActionController::ParameterMissing => e
     render json: { error: e.message }, status: :bad_request
+  rescue ActiveRecord::RecordInvalid => e
+    render json: { error: e.message }, status: :unprocessable_entity
   rescue Plaid::ApiError => e
     Rails.logger.error("Plaid token exchange error: #{e.message}")
     render json: { error: "Unable to exchange token" }, status: :service_unavailable

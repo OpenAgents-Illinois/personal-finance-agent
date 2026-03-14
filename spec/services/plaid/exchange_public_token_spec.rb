@@ -48,11 +48,16 @@ RSpec.describe Plaid::ExchangePublicToken do
       expect(result.plaid_item_id).to eq("item-123")
     end
 
-    context "when PlaidItem already exists" do
+    context "when PlaidItem already exists (re-link)" do
       before { create(:plaid_item, user: user, plaid_item_id: "item-123") }
 
       it "does not create a duplicate" do
         expect { service.call }.not_to change(PlaidItem, :count)
+      end
+
+      it "does not enqueue SyncTransactionsJob again" do
+        service.call
+        expect(SyncTransactionsJob).not_to have_received(:perform_later)
       end
     end
   end
