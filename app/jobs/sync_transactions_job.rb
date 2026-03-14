@@ -1,7 +1,9 @@
 class SyncTransactionsJob < ApplicationJob
   queue_as :default
+  discard_on ActiveRecord::RecordNotFound
 
   def perform(plaid_item_id)
-    # Implemented in Task 3.4 — Plaid::SyncTransactions service
+    plaid_item = PlaidItem.find(plaid_item_id)
+    Plaid::SyncTransactions.new(plaid_item).call
   end
 end
