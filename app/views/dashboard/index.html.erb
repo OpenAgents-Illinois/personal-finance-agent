@@ -1,11 +1,12 @@
 <% content_for :title, "Dashboard" %>
 
-<div class="space-y-6">
-  <!-- Header -->
-  <div class="flex items-end justify-between">
+<div class="space-y-7">
+
+  <!-- Page header -->
+  <div class="flex items-start justify-between">
     <div>
       <h1 class="text-2xl font-bold text-gray-900">Dashboard</h1>
-      <p class="text-sm text-gray-500 mt-1"><%= @date.strftime("%B %Y") %></p>
+      <p class="text-sm text-gray-500 mt-0.5"><%= @date.strftime("%B %Y") %></p>
     </div>
     <% if @has_accounts %>
       <button
@@ -14,55 +15,136 @@
         data-plaid-link-exchange-url-value="<%= exchange_public_token_path %>"
         data-label="+ Add account"
         data-action="click->plaid-link#open"
-        class="text-sm font-medium text-indigo-600 hover:text-indigo-800 disabled:opacity-50"
+        class="inline-flex items-center gap-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-lg transition-colors disabled:opacity-50"
       >
-        + Add account
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+        </svg>
+        Add account
       </button>
     <% end %>
   </div>
 
   <!-- Connect Bank Banner -->
   <% unless @has_accounts %>
-    <div class="bg-indigo-600 rounded-xl p-6 text-white flex items-center justify-between">
-      <div>
-        <p class="font-semibold text-lg">Connect your bank to get started</p>
-        <p class="text-indigo-200 text-sm mt-1">Securely link your accounts via Plaid to see your spending insights.</p>
+    <div class="relative overflow-hidden bg-gradient-to-br from-indigo-600 to-indigo-800 rounded-2xl p-7 text-white shadow-lg">
+      <div class="absolute -right-8 -top-8 w-40 h-40 rounded-full bg-white/5"></div>
+      <div class="absolute -right-4 -bottom-10 w-56 h-56 rounded-full bg-white/5"></div>
+      <div class="relative flex items-center justify-between gap-6">
+        <div>
+          <p class="font-semibold text-xl">Connect your bank to get started</p>
+          <p class="text-indigo-200 text-sm mt-1.5 max-w-md">Securely link your accounts via Plaid to unlock spending insights, subscription tracking, and AI-powered recommendations.</p>
+        </div>
+        <button
+          data-controller="plaid-link"
+          data-plaid-link-link-token-url-value="<%= link_token_path %>"
+          data-plaid-link-exchange-url-value="<%= exchange_public_token_path %>"
+          data-label="Connect a bank account"
+          data-action="click->plaid-link#open"
+          class="flex-shrink-0 bg-white text-indigo-700 font-semibold px-5 py-2.5 rounded-lg hover:bg-indigo-50 transition-colors text-sm shadow-sm disabled:opacity-50"
+        >
+          Connect a bank account
+        </button>
       </div>
-      <button
-        data-controller="plaid-link"
-        data-plaid-link-link-token-url-value="<%= link_token_path %>"
-        data-plaid-link-exchange-url-value="<%= exchange_public_token_path %>"
-        data-label="Connect a bank account"
-        data-action="click->plaid-link#open"
-        class="flex-shrink-0 ml-6 bg-white text-indigo-600 font-semibold px-5 py-2.5 rounded-lg hover:bg-indigo-50 transition-colors disabled:opacity-50"
-      >
-        Connect a bank account
-      </button>
     </div>
   <% end %>
 
-  <!-- Total Spend Card -->
-  <div class="bg-white rounded-xl border border-gray-200 p-6">
-    <p class="text-sm text-gray-500 font-medium uppercase tracking-wide">Total Spend This Month</p>
-    <p class="text-4xl font-bold text-gray-900 mt-2">$<%= number_with_delimiter(@total_spend.round(2)) %></p>
+  <!-- KPI Cards -->
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+    <!-- Total Spend -->
+    <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+      <div class="flex items-center justify-between mb-3">
+        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Total Spend</p>
+        <div class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center">
+          <svg class="w-4 h-4 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z" />
+          </svg>
+        </div>
+      </div>
+      <p class="text-3xl font-bold text-gray-900">$<%= number_with_delimiter(@total_spend.round(2)) %></p>
+      <p class="text-xs text-gray-400 mt-1"><%= @date.strftime("%B %Y") %></p>
+    </div>
+
+    <!-- Top Category -->
+    <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+      <div class="flex items-center justify-between mb-3">
+        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Top Category</p>
+        <div class="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center">
+          <svg class="w-4 h-4 text-amber-500" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6Z" />
+          </svg>
+        </div>
+      </div>
+      <% top = @categories.first %>
+      <% if top %>
+        <p class="text-3xl font-bold text-gray-900">$<%= number_with_delimiter(top[:total]) %></p>
+        <p class="text-xs text-gray-400 mt-1"><%= top[:category].gsub("_", " ").titleize %></p>
+      <% else %>
+        <p class="text-3xl font-bold text-gray-300">—</p>
+        <p class="text-xs text-gray-400 mt-1">No data yet</p>
+      <% end %>
+    </div>
+
+    <!-- Spending Alert / Status -->
+    <% if @spikes.any? %>
+      <% spike = @spikes.first %>
+      <div class="bg-amber-50 rounded-2xl border border-amber-200 shadow-sm p-6">
+        <div class="flex items-center justify-between mb-3">
+          <p class="text-xs font-semibold text-amber-600 uppercase tracking-wider">Spending Alert</p>
+          <div class="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center">
+            <svg class="w-4 h-4 text-amber-600" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+            </svg>
+          </div>
+        </div>
+        <p class="text-3xl font-bold text-amber-700">+<%= spike[:spike_percentage] %>%</p>
+        <p class="text-xs text-amber-600 mt-1"><%= spike[:category].gsub("_", " ").titleize %> above avg</p>
+      </div>
+    <% else %>
+      <div class="bg-emerald-50 rounded-2xl border border-emerald-200 shadow-sm p-6">
+        <div class="flex items-center justify-between mb-3">
+          <p class="text-xs font-semibold text-emerald-600 uppercase tracking-wider">Status</p>
+          <div class="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center">
+            <svg class="w-4 h-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
+          </div>
+        </div>
+        <p class="text-3xl font-bold text-emerald-700">On track</p>
+        <p class="text-xs text-emerald-600 mt-1">No spending spikes</p>
+      </div>
+    <% end %>
   </div>
 
+  <!-- Category + Merchant grid -->
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
     <!-- Category Breakdown -->
-    <div class="bg-white rounded-xl border border-gray-200 p-6">
-      <h2 class="text-base font-semibold text-gray-900 mb-4">Spending by Category</h2>
+    <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+      <h2 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-5">Spending by Category</h2>
+      <% category_colors = %w[bg-indigo-500 bg-emerald-500 bg-amber-500 bg-rose-500 bg-sky-500 bg-violet-500 bg-orange-500 bg-teal-500] %>
+      <% dot_colors = %w[bg-indigo-400 bg-emerald-400 bg-amber-400 bg-rose-400 bg-sky-400 bg-violet-400 bg-orange-400 bg-teal-400] %>
       <% if @categories.empty? %>
-        <p class="text-sm text-gray-400">No transactions this month.</p>
+        <div class="py-8 text-center">
+          <p class="text-sm text-gray-400">No transactions this month.</p>
+        </div>
       <% else %>
-        <ul class="space-y-3">
-          <% @categories.each do |cat| %>
+        <ul class="space-y-4">
+          <% @categories.each_with_index do |cat, i| %>
             <li>
-              <div class="flex justify-between text-sm mb-1">
-                <span class="text-gray-700"><%= cat[:category].gsub("_", " ").titleize %></span>
-                <span class="font-medium text-gray-900">$<%= number_with_delimiter(cat[:total]) %> <span class="text-gray-400 font-normal">(<%= cat[:percentage] %>%)</span></span>
+              <div class="flex items-center justify-between text-sm mb-1.5">
+                <div class="flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full flex-shrink-0 <%= dot_colors[i % dot_colors.length] %>"></span>
+                  <span class="text-gray-700 font-medium"><%= cat[:category].gsub("_", " ").titleize %></span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="font-semibold text-gray-900">$<%= number_with_delimiter(cat[:total]) %></span>
+                  <span class="text-xs font-medium px-1.5 py-0.5 rounded-full bg-gray-100 text-gray-500"><%= cat[:percentage] %>%</span>
+                </div>
               </div>
-              <div class="w-full bg-gray-100 rounded-full h-1.5">
-                <div class="bg-indigo-500 h-1.5 rounded-full" style="width: <%= cat[:percentage] %>%"></div>
+              <div class="w-full bg-gray-100 rounded-full h-2">
+                <div class="<%= category_colors[i % category_colors.length] %> h-2 rounded-full" style="width: <%= cat[:percentage] %>%"></div>
               </div>
             </li>
           <% end %>
@@ -71,19 +153,24 @@
     </div>
 
     <!-- Top Merchants -->
-    <div class="bg-white rounded-xl border border-gray-200 p-6">
-      <h2 class="text-base font-semibold text-gray-900 mb-4">Top Merchants</h2>
+    <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+      <h2 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-5">Top Merchants</h2>
       <% if @merchants.empty? %>
-        <p class="text-sm text-gray-400">No transactions this month.</p>
+        <div class="py-8 text-center">
+          <p class="text-sm text-gray-400">No transactions this month.</p>
+        </div>
       <% else %>
-        <ol class="space-y-3">
+        <ol class="space-y-1">
           <% @merchants.each do |m| %>
-            <li class="flex items-center justify-between">
+            <li class="flex items-center justify-between py-2.5 border-b border-gray-50 last:border-0">
               <div class="flex items-center gap-3">
-                <span class="text-xs font-semibold text-gray-400 w-4">#<%= m[:rank] %></span>
-                <span class="text-sm text-gray-700"><%= m[:merchant] %></span>
+                <span class="flex-shrink-0 w-7 h-7 rounded-full text-xs font-bold flex items-center justify-center
+                  <%= m[:rank] == 1 ? 'bg-yellow-100 text-yellow-700' : m[:rank] == 2 ? 'bg-gray-100 text-gray-600' : m[:rank] == 3 ? 'bg-orange-100 text-orange-600' : 'bg-gray-50 text-gray-400' %>">
+                  <%= m[:rank] %>
+                </span>
+                <span class="text-sm font-medium text-gray-800"><%= m[:merchant] %></span>
               </div>
-              <span class="text-sm font-medium text-gray-900">$<%= number_with_delimiter(m[:total]) %></span>
+              <span class="text-sm font-semibold text-gray-900">$<%= number_with_delimiter(m[:total]) %></span>
             </li>
           <% end %>
         </ol>
@@ -91,30 +178,53 @@
     </div>
   </div>
 
-  <!-- Spending Spike Alert -->
+  <!-- Spending Spike Detail -->
   <% if @spikes.any? %>
-    <div class="bg-amber-50 border border-amber-200 rounded-xl p-6">
-      <h2 class="text-base font-semibold text-amber-800 mb-1">Spending Alert</h2>
-      <% spike = @spikes.first %>
-      <p class="text-sm text-amber-700">
-        Your <strong><%= spike[:category].gsub("_", " ").titleize %></strong> spending is
-        <strong><%= spike[:spike_percentage] %>% above</strong> your 3-month average
-        ($<%= number_with_delimiter(spike[:current_total]) %> vs. $<%= number_with_delimiter(spike[:baseline_average]) %> avg).
-      </p>
+    <% spike = @spikes.first %>
+    <div class="bg-amber-50 border border-amber-200 rounded-2xl p-6 flex items-start gap-4">
+      <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center mt-0.5">
+        <svg class="w-5 h-5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+        </svg>
+      </div>
+      <div>
+        <h3 class="text-sm font-semibold text-amber-900">Spending Spike Detected</h3>
+        <p class="text-sm text-amber-700 mt-1">
+          Your <strong><%= spike[:category].gsub("_", " ").titleize %></strong> spending is
+          <strong><%= spike[:spike_percentage] %>% above</strong> your 3-month average
+          — $<%= number_with_delimiter(spike[:current_total]) %> this month vs. $<%= number_with_delimiter(spike[:baseline_average]) %> avg.
+        </p>
+      </div>
     </div>
   <% end %>
 
   <!-- Latest Recommendation -->
   <% if @recommendation %>
-    <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-6">
-      <div class="flex items-start justify-between mb-2">
-        <h2 class="text-base font-semibold text-indigo-900">Latest Recommendation</h2>
-        <span class="text-xs text-indigo-400"><%= @recommendation.generated_at.strftime("%b %-d, %Y") %></span>
+    <div class="relative overflow-hidden bg-gradient-to-br from-indigo-50 to-white border border-indigo-200 rounded-2xl p-6">
+      <div class="absolute right-0 top-0 w-40 h-40 rounded-full bg-indigo-100/40 -mr-10 -mt-10"></div>
+      <div class="relative">
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-2">
+            <div class="w-6 h-6 rounded-md bg-indigo-600 flex items-center justify-center">
+              <svg class="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z" />
+              </svg>
+            </div>
+            <h2 class="text-sm font-semibold text-indigo-900">AI Recommendation</h2>
+          </div>
+          <span class="text-xs text-indigo-400"><%= @recommendation.generated_at.strftime("%b %-d, %Y") %></span>
+        </div>
+        <div class="text-sm text-indigo-800 markdown">
+          <%= render_markdown(@recommendation.content.truncate(400)) %>
+        </div>
+        <%= link_to action_plan_path, class: "inline-flex items-center gap-1.5 mt-4 text-sm font-semibold text-indigo-600 hover:text-indigo-800" do %>
+          View full action plan
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+          </svg>
+        <% end %>
       </div>
-      <div class="text-sm text-indigo-800 markdown">
-        <%= render_markdown(@recommendation.content.truncate(600)) %>
-      </div>
-      <%= link_to "View full action plan →", action_plan_path, class: "inline-block mt-3 text-sm font-medium text-indigo-600 hover:text-indigo-800" %>
     </div>
   <% end %>
+
 </div>
