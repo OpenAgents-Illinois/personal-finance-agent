@@ -1,6 +1,6 @@
 # Personal Finance Agent
 
-A Rails web app that connects to your bank accounts, automatically analyzes your spending, and generates actionable recommendations — all running in the background without you having to interact with a chatbot.
+A **Ruby on Rails** web app that connects to your bank accounts via the **Plaid API**, automatically analyzes your spending, and generates actionable recommendations: all running in the background without you having to interact with a chatbot.
 
 ---
 
@@ -66,7 +66,31 @@ ANTHROPIC_API_KEY=
 RAILS_MASTER_KEY=
 ```
 
-### Running Locally
+### Running with Docker (recommended)
+
+```bash
+# First time (or after gem changes)
+docker compose build
+
+# Start everything
+docker compose up
+
+# Stop
+docker compose down
+
+# Reset all data (nuke volumes)
+docker compose down -v
+```
+
+| Service | What it does |
+|---------|-------------|
+| `db` | Postgres 16 |
+| `redis` | Redis 7 (Sidekiq queue) |
+| `web` | Rails server on :3000, runs `db:prepare` on boot |
+| `worker` | Sidekiq |
+| `css` | Tailwind watcher (rebuilds on file changes) |
+
+### Running Locally (without Docker)
 
 ```bash
 bundle install
