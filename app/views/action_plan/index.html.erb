@@ -89,20 +89,7 @@
 
   <!-- AI Recommendations -->
   <div class="space-y-4">
-    <div class="flex items-center justify-between">
-      <h2 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">AI Recommendations</h2>
-      <% unless @recommendation_this_month %>
-        <% if @has_accounts %>
-          <%= button_to generate_action_plan_path(month: @date.strftime("%Y-%m")), method: :post,
-              class: "inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold px-4 py-1.5 rounded-lg transition-colors" do %>
-            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z" />
-            </svg>
-            Generate for <%= @date.strftime("%B") %>
-          <% end %>
-        <% end %>
-      <% end %>
-    </div>
+    <h2 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">AI Recommendations</h2>
 
     <% if @recommendation_this_month %>
       <div class="relative overflow-hidden bg-gradient-to-br from-indigo-50 to-white rounded-2xl border border-indigo-100 shadow-sm p-6">
@@ -140,7 +127,14 @@
             Connect a bank account
           <% end %>
         <% else %>
-          <p class="text-sm text-gray-400 mt-1 max-w-sm mx-auto">Use the "Generate for <%= @date.strftime("%B") %>" button above to get personalized AI advice.</p>
+          <p class="text-sm text-gray-400 mt-1 mb-6 max-w-sm mx-auto">Generate personalized AI advice based on your spending patterns and savings opportunities.</p>
+          <%= button_to generate_action_plan_path(month: @date.strftime("%Y-%m")), method: :post,
+              class: "inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-6 py-2.5 rounded-lg transition-colors" do %>
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z" />
+            </svg>
+            Generate for <%= @date.strftime("%B %Y") %>
+          <% end %>
         <% end %>
       </div>
     <% end %>
