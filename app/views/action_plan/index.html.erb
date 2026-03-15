@@ -7,6 +7,9 @@
       <h1 class="text-2xl font-bold text-gray-900">Action Plan</h1>
       <p class="text-sm text-gray-500 mt-1"><%= @date.strftime("%B %Y") %></p>
     </div>
+    <%= button_to "Generate recommendations", generate_action_plan_path,
+        method: :post,
+        class: "bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition" %>
     <% if @total_savings > 0 %>
       <div class="text-right">
         <p class="text-xs text-gray-500 uppercase tracking-wide font-medium">Potential Monthly Savings</p>
@@ -57,8 +60,12 @@
       <% end %>
     </div>
   <% else %>
-    <div class="bg-white rounded-xl border border-gray-200 p-6 text-center">
-      <p class="text-sm text-gray-400">No recommendations generated yet. Run the Recommendation Generation Job to get personalized advice.</p>
+    <div class="bg-white rounded-xl border border-gray-200 p-10 text-center">
+      <p class="text-sm font-medium text-gray-700">No recommendations yet</p>
+      <p class="text-sm text-gray-400 mt-1 mb-5">Click "Generate recommendations" above to get personalized AI advice based on your spending.</p>
+      <%= button_to "Generate now", generate_action_plan_path,
+          method: :post,
+          class: "bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-5 py-2.5 rounded-lg transition" %>
     </div>
   <% end %>
 </div>

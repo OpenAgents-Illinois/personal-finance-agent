@@ -21,7 +21,7 @@ RSpec.describe "ActionPlan", type: :request do
 
       it "shows empty state when no recommendations exist" do
         get action_plan_path
-        expect(response.body).to include("No recommendations generated yet")
+        expect(response.body).to include("No recommendations yet")
       end
 
       it "shows savings opportunities when transactions exist" do
