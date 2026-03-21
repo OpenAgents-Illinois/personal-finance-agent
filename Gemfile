@@ -70,4 +70,4 @@ end
 gem "devise", "~> 5.0"
 gem "sidekiq", "~> 8.1"
 gem "plaid", "~> 28.0"
-gem "anthropic", "~> 1.0"
+gem "anthropic", "~> 1.25"
