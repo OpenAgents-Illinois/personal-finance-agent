@@ -1,0 +1,4 @@
+{"type":"server-started","port":51976,"host":"127.0.0.1","url_host":"localhost","url":"http://localhost:51976","screen_dir":"/Users/anirudh/UIUC/go-mama-27/100-ai-agents/personal-finance-agent/.superpowers/brainstorm/87322-1774489069/content","state_dir":"/Users/anirudh/UIUC/go-mama-27/100-ai-agents/personal-finance-agent/.superpowers/brainstorm/87322-1774489069/state"}
+{"type":"screen-added","file":"/Users/anirudh/UIUC/go-mama-27/100-ai-agents/personal-finance-agent/.superpowers/brainstorm/87322-1774489069/content/workshop-structure.html"}
+{"type":"screen-added","file":"/Users/anirudh/UIUC/go-mama-27/100-ai-agents/personal-finance-agent/.superpowers/brainstorm/87322-1774489069/content/workshop-agenda.html"}
+{"type":"server-stopped","reason":"idle timeout"}

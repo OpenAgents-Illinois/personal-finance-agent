@@ -1,0 +1,40 @@
+services:
+  web:
+    image: registry.digitalocean.com/personal-finance-agent/personal_finance_agent:latest
+    ports:
+      - "80:80"
+    depends_on:
+      - db
+      - redis
+    environment:
+      RAILS_ENV: production
+      DB_HOST: db
+      REDIS_URL: redis://redis:6379/0
+      RAILS_LOG_LEVEL: info
+      SOLID_QUEUE_IN_PUMA: "true"
+    env_file:
+      - .env.production
+    volumes:
+      - storage:/rails/storage
+    restart: unless-stopped
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: personal_finance_agent
+      POSTGRES_DB: personal_finance_agent_production
+      POSTGRES_PASSWORD: ${PERSONAL_FINANCE_AGENT_DATABASE_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
+  storage:
