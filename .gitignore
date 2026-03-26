@@ -55,6 +55,12 @@
 # Used by dotenv library to load environment variables.
 # .env
 
+# Screen recording credentials
+recordings/.env
+recordings/raw.mp4
+recordings/ffmpeg.log
+recordings/moments.jsonl
+
 # Ignore Byebug command history file.
 .byebug_history
 
