@@ -11,8 +11,9 @@ servers:
 
 # DigitalOcean Container Registry.
 registry:
-  server: registry.digitalocean.com/personal-finance-agent
-  username: personal-finance-agent
+  server: registry.digitalocean.com
+  username:
+    - KAMAL_REGISTRY_PASSWORD
   password:
     - KAMAL_REGISTRY_PASSWORD
 
