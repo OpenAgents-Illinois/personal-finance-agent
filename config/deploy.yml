@@ -55,9 +55,8 @@ accessories:
       clear:
         POSTGRES_USER: personal_finance_agent
         POSTGRES_DB: personal_finance_agent_production
-        POSTGRES_PASSWORD_FILE: /dev/null
       secret:
-        - PERSONAL_FINANCE_AGENT_DATABASE_PASSWORD
+        - POSTGRES_PASSWORD
     directories:
       - data:/var/lib/postgresql/data
 
