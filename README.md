@@ -4,6 +4,8 @@
 
 A **Ruby on Rails** web app that connects to your bank accounts via the **Plaid API**, automatically analyzes your spending, and generates actionable recommendations — all running in the background without you having to interact with a chatbot.
 
+> **Note:** This app currently runs in Plaid sandbox mode. You cannot connect a real bank account — use Plaid's test credentials instead: username `user_good`, password `pass_good`.
+
 ---
 
 ## How It Works
