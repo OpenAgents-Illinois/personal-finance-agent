@@ -27,6 +27,11 @@ jobs:
             cat > .env <<EOF
             RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }}
             PERSONAL_FINANCE_AGENT_DATABASE_PASSWORD=${{ secrets.PERSONAL_FINANCE_AGENT_DATABASE_PASSWORD }}
+            PLAID_CLIENT_ID=${{ secrets.PLAID_CLIENT_ID }}
+            PLAID_SECRET=${{ secrets.PLAID_SECRET }}
+            PLAID_ENV=sandbox
+            PLAID_APP_NAME=Personal Finance Agent
+            ANTHROPIC_API_KEY=${{ secrets.ANTHROPIC_API_KEY }}
             EOF
 
             docker compose -f docker-compose.production.yml up -d --build
