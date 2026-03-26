@@ -1,8 +1,8 @@
 # Name of your application. Used to uniquely configure containers.
 service: personal_finance_agent
 
-# Name of the container image.
-image: registry.digitalocean.com/personal-finance-agent/personal_finance_agent
+# Name of the container image (without registry host; `registry.server` is prepended by Kamal).
+image: personal-finance-agent/personal_finance_agent
 
 # Deploy to these servers.
 servers:
