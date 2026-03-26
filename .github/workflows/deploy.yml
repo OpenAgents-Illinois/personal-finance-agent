@@ -28,14 +28,15 @@ jobs:
           docker build -t registry.digitalocean.com/personal-finance-agent/personal_finance_agent:latest .
           docker push registry.digitalocean.com/personal-finance-agent/personal_finance_agent:latest
 
-      - name: Write .env.production to droplet
+      - name: Write .env to droplet
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ vars.DROPLET_IP }}
           username: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cat > /root/app/.env.production <<'EOF'
+            mkdir -p /root/app
+            cat > /root/app/.env <<'EOF'
             RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }}
             PERSONAL_FINANCE_AGENT_DATABASE_PASSWORD=${{ secrets.PERSONAL_FINANCE_AGENT_DATABASE_PASSWORD }}
             EOF
