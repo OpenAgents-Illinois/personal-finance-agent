@@ -1,5 +1,7 @@
 # Personal Finance Agent
 
+**Live URL**: 
+
 A **Ruby on Rails** web app that connects to your bank accounts via the **Plaid API**, automatically analyzes your spending, and generates actionable recommendations — all running in the background without you having to interact with a chatbot.
 
 ---
@@ -78,7 +80,9 @@ PLAID_APP_NAME="Personal Finance Agent"
 ANTHROPIC_API_KEY=your_anthropic_api_key
 ```
 
-### 3. Start with Docker (recommended)
+### 3. Start the app
+
+**Option A: Docker (recommended — no local Ruby/Postgres/Redis needed)**
 
 ```bash
 docker compose up
@@ -96,15 +100,29 @@ This starts:
 
 The database is created and migrated automatically on first boot.
 
-### 4. Start without Docker
+If you get gem errors after pulling new changes, rebuild the image:
 
 ```bash
+docker compose down -v
+docker compose build --no-cache
+docker compose up
+```
+
+**Option B: Native Ruby**
+
+Requires Ruby 3.3.x, Postgres, and Redis installed locally.
+
+```bash
+# Start just the databases via Docker
+docker compose up -d db redis
+
+# Then run the app natively
 bundle install
 bin/rails db:prepare
 bin/dev
 ```
 
-> Requires Postgres and Redis running locally.
+Visit `http://localhost:3000`.
 
 ---
 
@@ -149,12 +167,3 @@ The app deploys automatically to a DigitalOcean droplet via GitHub Actions on ev
 | Variable | Description |
 |---|---|
 | `DROPLET_IP` | IP address of the DigitalOcean droplet |
-
-### Manual deploy
-
-```bash
-ssh root@<droplet-ip>
-cd /root/app
-git pull origin master
-docker compose -f docker-compose.production.yml up -d --build
-```
