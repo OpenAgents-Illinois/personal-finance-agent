@@ -1,6 +1,6 @@
 # Personal Finance Agent
 
-**Live URL**: 
+**Live URL**: http://159.203.118.84/
 
 A **Ruby on Rails** web app that connects to your bank accounts via the **Plaid API**, automatically analyzes your spending, and generates actionable recommendations — all running in the background without you having to interact with a chatbot.
 
