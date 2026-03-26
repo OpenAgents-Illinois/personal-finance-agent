@@ -33,7 +33,6 @@ services:
       sh -c "bin/rails db:prepare && bin/rails server -b 0.0.0.0 -p 3000"
     volumes:
       - .:/rails
-      - bundle_cache:/usr/local/bundle
     ports:
       - "3000:3000"
     env_file: .env
@@ -54,7 +53,6 @@ services:
     command: bundle exec sidekiq
     volumes:
       - .:/rails
-      - bundle_cache:/usr/local/bundle
     env_file: .env
     environment:
       DATABASE_URL: postgres://postgres:password@db:5432/personal_finance_agent_development
@@ -73,10 +71,8 @@ services:
     command: bin/rails tailwindcss:watch
     volumes:
       - .:/rails
-      - bundle_cache:/usr/local/bundle
     environment:
       RAILS_ENV: development
 
 volumes:
   postgres_data:
-  bundle_cache:
