@@ -56,10 +56,10 @@ group :development, :test do
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
 
-  gem "rspec-rails", "~> 7.0"
+  gem "rspec-rails", "~> 8.0"
   gem "factory_bot_rails"
   gem "faker"
-  gem "shoulda-matchers", "~> 6.0"
+  gem "shoulda-matchers", "~> 7.0"
 end
 
 group :development do
@@ -69,5 +69,5 @@ end
 
 gem "devise", "~> 5.0"
 gem "sidekiq", "~> 8.1"
-gem "plaid", "~> 28.0"
+gem "plaid", "~> 45.0"
 gem "anthropic", "~> 1.0"
